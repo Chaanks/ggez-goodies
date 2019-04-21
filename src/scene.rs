@@ -139,21 +139,23 @@ impl<C, Ev> SceneStack<C, Ev> {
     /// supposed to draw the previous one, then draw them from the bottom up.
     ///
     /// This allows for layering GUI's and such.
-    fn draw_scenes(scenes: &mut [Box<Scene<C, Ev>>], world: &mut C, ctx: &mut ggez::Context) {
+    fn draw_scenes(scenes: &mut [Box<Scene<C, Ev>>], world: &mut C, ctx: &mut ggez::Context, ui: &mut imgui::Ui) {
         assert!(scenes.len() > 0);
         if let Some((current, rest)) = scenes.split_last_mut() {
             if current.draw_previous() {
-                SceneStack::draw_scenes(rest, world, ctx);
+                SceneStack::draw_scenes(rest, world, ctx, ui);
             }
             current
                 .draw(world, ctx)
                 .expect("I would hope drawing a scene never fails!");
+            
+            current.draw_ui(ctx, ui);
         }
     }
 
     /// Draw the current scene.
-    pub fn draw(&mut self, ctx: &mut ggez::Context) {
-        SceneStack::draw_scenes(&mut self.scenes, &mut self.world, ctx)
+    pub fn draw(&mut self, ctx: &mut ggez::Context, ui: &mut imgui::Ui) {
+        SceneStack::draw_scenes(&mut self.scenes, &mut self.world, ctx, ui)
     }
 
     /// Feeds the given input event to the current scene.
