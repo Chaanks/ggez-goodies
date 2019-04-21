@@ -15,6 +15,7 @@
 //! together.
 
 use ggez;
+use imgui;
 
 /// A command to change to a new scene, either by pushign a new one,
 /// popping one or replacing the current scene (pop and then push).
@@ -31,6 +32,7 @@ pub enum SceneSwitch<C, Ev> {
 pub trait Scene<C, Ev> {
     fn update(&mut self, gameworld: &mut C, ctx: &mut ggez::Context) -> SceneSwitch<C, Ev>;
     fn draw(&mut self, gameworld: &mut C, ctx: &mut ggez::Context) -> ggez::GameResult<()>;
+    fn draw_ui(&self, ctx: &mut ggez::Context, ui: &mut imgui::Ui) {}
     fn input(&mut self, gameworld: &mut C, event: Ev, started: bool);
     /// Only used for human-readable convenience (or not at all, tbh)
     fn name(&self) -> &str;
