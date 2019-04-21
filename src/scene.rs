@@ -32,7 +32,7 @@ pub enum SceneSwitch<C, Ev> {
 pub trait Scene<C, Ev> {
     fn update(&mut self, gameworld: &mut C, ctx: &mut ggez::Context) -> SceneSwitch<C, Ev>;
     fn draw(&mut self, gameworld: &mut C, ctx: &mut ggez::Context) -> ggez::GameResult<()>;
-    fn draw_ui(&mut self, _ctx: &mut ggez::Context, _ui: &mut imgui::Ui) {}
+    fn draw_ui(&mut self, _gameworld: &mut C,  _ctx: &mut ggez::Context, _ui: &mut imgui::Ui) {}
     fn input(&mut self, gameworld: &mut C, event: Ev, started: bool);
     /// Only used for human-readable convenience (or not at all, tbh)
     fn name(&self) -> &str;
@@ -158,7 +158,7 @@ impl<C, Ev> SceneStack<C, Ev> {
                 SceneStack::draw_scenes_ui(rest, world, ctx, ui);
             }
             
-            current.draw_ui(ctx, ui);
+            current.draw_ui(world, ctx, ui);
         }
     }
 
